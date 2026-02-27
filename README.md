@@ -33,7 +33,12 @@ Les composants locaux sont containerisés via Docker.\
 L'inférence est réalisée via un endpoint AWS SageMaker appelé par
 Airflow.
 
-Le schéma d'architecture du projet est disponible dans le repository.
+## Schéma d’architecture
+
+<p align="center">
+  <img src="Bloc%203%20-%20Sch%C3%A9ma%20infrastructure.png" width="800">
+</p>
+<p align="center"><em>Architecture globale de la pipeline de détection de fraude</em></p>
 
 ------------------------------------------------------------------------
 
