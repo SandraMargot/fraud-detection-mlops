@@ -1,0 +1,24 @@
+# Secrets
+.env
+**/.env
+
+# Python
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+
+# Airflow logs (massifs)
+airflow/logs/
+**/logs/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Data / artifacts (à ajuster)
+# fraud-pipeline/artifacts/preprocess.joblib (conservé, à destination du jury)
+fraud-pipeline/artifacts/train.csv
+fraud-pipeline/artifacts/val.csv
