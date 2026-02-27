@@ -7,7 +7,7 @@ par Airflow**, conçue pour fonctionner en quasi temps réel.
 
 Les exigences métier sont les suivantes :
 
--   Être notifié immédiatement en cas de fraude détectée\
+-   Être notifié immédiatement en cas de fraude détectée
 -   Consulter chaque matin l'ensemble des paiements et fraudes survenus
     la veille
 
@@ -23,22 +23,12 @@ secondaire dans cet exercice.
 
 L'infrastructure repose sur une séparation claire des responsabilités :
 
-  ------------------------------------------------------------------------
-  Composant                Rôle             Localisation
-  ------------------------ ---------------- ------------------------------
-  Airflow 2.8              Orchestration du Docker (local)
-  (LocalExecutor)          pipeline         
-
-  PostgreSQL               Stockage des     Docker (local)
-                           transactions     
-                           scorées          
-
-  Streamlit                Reporting        Docker (local)
-                           quotidien        
-
-  AWS SageMaker Endpoint   Inférence temps  AWS
-                           réel du modèle   
-  ------------------------------------------------------------------------
+| Composant | Rôle | Localisation |
+|-----------|------|--------------|
+| Airflow 2.8 (LocalExecutor) | Orchestration du pipeline | Docker (local) |
+| PostgreSQL | Stockage des transactions scorées | Docker (local) |
+| Streamlit | Reporting quotidien | Docker (local) |
+| AWS SageMaker Endpoint | Inférence temps réel du modèle | AWS |
 
 Les composants locaux sont containerisés via Docker.\
 L'inférence est réalisée via un endpoint AWS SageMaker appelé par
@@ -63,22 +53,22 @@ Le DAG implémente les étapes suivantes :
 
 ### 2. Transform
 
--   Parsing JSON\
--   Nettoyage et casting des types\
--   Alignement des features avec celles du modèle\
--   Application du pipeline de preprocessing (`preprocess.joblib`)\
+-   Parsing JSON
+-   Nettoyage et casting des types
+-   Alignement des features avec celles du modèle
+-   Application du pipeline de preprocessing (`preprocess.joblib`)
 -   Production d'un dataset prêt pour l'inférence
 
 ### 3. Score
 
--   Appel HTTPS à l'endpoint SageMaker (boto3 -- `invoke_endpoint`)\
--   Récupération de la probabilité de fraude\
+-   Appel HTTPS à l'endpoint SageMaker (boto3 -- `invoke_endpoint`)
+-   Récupération de la probabilité de fraude
 -   Calcul du flag fraude selon un seuil configurable
     (`FRAUD_THRESHOLD`)
 
 ### 4. Load
 
--   Insertion dans la table `payments_scored`\
+-   Insertion dans la table `payments_scored`
 
 -   Utilisation de :
 
@@ -86,8 +76,8 @@ Le DAG implémente les étapes suivantes :
 
     Ce choix garantit :
 
-    -   L'idempotence du pipeline\
-    -   L'absence de doublons\
+    -   L'idempotence du pipeline
+    -   L'absence de doublons
     -   La robustesse en cas de reprocessing
 
 ### 5. Alert
@@ -103,8 +93,8 @@ Table principale : `payments_scored`
 
 Caractéristiques :
 
--   `trans_num` défini comme PRIMARY KEY\
--   Stratégie UPSERT\
+-   `trans_num` défini comme PRIMARY KEY
+-   Stratégie UPSERT
 -   Vue SQL : `v_daily_fraud_report`
 
 Cette vue permet de répondre directement à l'exigence métier de
@@ -116,7 +106,7 @@ reporting quotidien (J-1).
 
 Le modèle a été :
 
-1.  Entraîné sur AWS SageMaker\
+1.  Entraîné sur AWS SageMaker
 2.  Déployé derrière un endpoint temps réel
 
 Pour des raisons de coût, l'endpoint n'est pas maintenu actif en
@@ -139,8 +129,8 @@ Un conteneur Streamlit indépendant (port 8501) interroge la vue
 
 Il permet :
 
--   La consultation des transactions de la veille\
--   La visualisation des fraudes détectées\
+-   La consultation des transactions de la veille
+-   La visualisation des fraudes détectées
 -   Un support opérationnel quotidien
 
 ------------------------------------------------------------------------
@@ -154,13 +144,13 @@ Le projet inclut :
 
 Ces fichiers décrivent les variables d'environnement nécessaires :
 
--   Connexion PostgreSQL\
--   Paramètres AWS\
--   Seuil de fraude\
+-   Connexion PostgreSQL
+-   Paramètres AWS
+-   Seuil de fraude
 -   Paramètres SMTP
 
 Pour exécution locale : - Docker et Docker Compose requis\
-- Credentials AWS configurés\
+- Credentials AWS configurés
 - Endpoint SageMaker disponible
 
 Le jury n'a pas besoin de relancer l'infrastructure complète ; le
@@ -170,11 +160,11 @@ repository documente néanmoins les dépendances externes.
 
 ## 8. Principes de conception
 
--   Architecture orientée pipeline\
--   Orchestration centralisée via Airflow\
--   Idempotence garantie\
--   Séparation claire des responsabilités\
--   Infrastructure containerisée\
+-   Architecture orientée pipeline
+-   Orchestration centralisée via Airflow
+-   Idempotence garantie
+-   Séparation claire des responsabilités
+-   Infrastructure containerisée
 -   Design compatible production
 
 ------------------------------------------------------------------------
@@ -183,10 +173,10 @@ repository documente néanmoins les dépendances externes.
 
 Ce projet démontre :
 
--   La conception d'un DAG Airflow robuste\
--   L'intégration d'un modèle ML déployé sur AWS\
--   Une ingestion fiable et idempotente\
--   Un mécanisme d'alerte temps réel\
+-   La conception d'un DAG Airflow robuste
+-   L'intégration d'un modèle ML déployé sur AWS
+-   Une ingestion fiable et idempotente
+-   Un mécanisme d'alerte temps réel
 -   Un reporting quotidien répondant aux exigences métier
 
 L'accent a été mis sur la qualité de l'orchestration et la cohérence de
