@@ -11,18 +11,17 @@ Les exigences métier sont les suivantes :
 -   Consulter chaque matin l'ensemble des paiements et fraudes survenus
     la veille
 
-L'objectif principal de l'exercice est la **conception et
+L'objectif principal est la **conception et
 l'implémentation d'un DAG Airflow robuste, idempotent et orienté
 production**.\
 La partie Machine Learning est fonctionnelle mais volontairement
-secondaire dans cet exercice.
+secondaire ici.
 
 ------------------------------------------------------------------------
 
 ## 2. Architecture globale
 
 L'infrastructure repose sur une séparation claire des responsabilités :
-
 | Composant | Rôle | Localisation |
 |-----------|------|--------------|
 | Airflow 2.8 (LocalExecutor) | Orchestration du pipeline | Docker (local) |
@@ -109,7 +108,7 @@ Le modèle a été :
 1.  Entraîné sur AWS SageMaker
 2.  Déployé derrière un endpoint temps réel
 
-Pour des raisons de coût, l'endpoint n'est pas maintenu actif en
+Pour des raisons de coût, l'endpoint AWS n'est pas maintenu actif en
 permanence.\
 Cependant, l'architecture est conçue pour fonctionner en production avec
 inférence temps réel.
@@ -149,12 +148,10 @@ Ces fichiers décrivent les variables d'environnement nécessaires :
 -   Seuil de fraude
 -   Paramètres SMTP
 
-Pour exécution locale : - Docker et Docker Compose requis\
+Pour exécution locale :
+- Docker et Docker Compose requis
 - Credentials AWS configurés
 - Endpoint SageMaker disponible
-
-Le jury n'a pas besoin de relancer l'infrastructure complète ; le
-repository documente néanmoins les dépendances externes.
 
 ------------------------------------------------------------------------
 
@@ -181,6 +178,8 @@ Ce projet démontre :
 
 L'accent a été mis sur la qualité de l'orchestration et la cohérence de
 l'infrastructure.
+
+L'architecture proposée est compatible avec un déploiement en environnement de production, moyennant externalisation des services locaux (RDS, monitoring, executor distribué).
 
 ------------------------------------------------------------------------
 
