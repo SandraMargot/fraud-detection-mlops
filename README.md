@@ -108,7 +108,7 @@ reporting quotidien (J-1).
 
 ## 5. Couche Machine Learning
 
-Le modèle a été :
+Le modèle (XGBoost) a été :
 
 1.  Entraîné sur AWS SageMaker
 2.  Déployé derrière un endpoint temps réel
